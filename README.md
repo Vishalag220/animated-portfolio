@@ -1,6 +1,36 @@
-# Animated Portfolio Website
+# 🚀 Animated Portfolio
 
-A modern, full-stack portfolio website built with React, Three.js, Framer Motion, and Node.js.
+A modern, responsive portfolio website built with React, Three.js, and cutting-edge web technologies.
+
+## ✨ Features
+
+- **Modern Design**: Black & white theme with glass morphism effects
+- **3D Animations**: Three.js powered hero section with animated sphere and particles
+- **Responsive**: Works perfectly on all devices
+- **Working Contact Form**: Powered by Getform for reliable message delivery
+- **Fast Performance**: Optimized bundle size (331.99 kB)
+- **Automated Deployment**: GitHub Actions + Vercel integration
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React, Tailwind CSS, Framer Motion, Three.js
+- **Form Backend**: Getform
+- **Deployment**: Vercel
+- **CI/CD**: GitHub Actions
+
+## 📱 Live Demo
+
+Visit the live portfolio: [Coming Soon]
+
+## 🚀 Quick Deploy
+
+```bash
+./deploy.ps1 "Your update message"
+```
+
+---
+
+**Last deployed**: January 13, 2025 - Getform integration with enhanced contact form
 
 ## Features
 
