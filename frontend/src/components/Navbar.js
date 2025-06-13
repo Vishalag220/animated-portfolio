@@ -319,7 +319,7 @@ const Navbar = () => {
                   className="p-6 border-t border-black/10 dark:border-white/10"
                 >
                   <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-                    © 2024 Your Name
+                    © 2025 Vishal Agarwal
                   </div>
                 </motion.div>
               </div>
