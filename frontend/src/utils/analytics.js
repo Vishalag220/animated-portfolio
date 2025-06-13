@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 // Generate a session ID
 const getSessionId = () => {
   let sessionId = sessionStorage.getItem('portfolio_session_id');
@@ -13,11 +11,14 @@ const getSessionId = () => {
 // Track an analytics event
 export const trackEvent = async (type, page, metadata = {}) => {
   try {
-    await axios.post('/api/analytics/track', {
+    // For now, just log analytics events to console
+    // You can later integrate with Google Analytics, Mixpanel, or other services
+    console.log('📊 Analytics Event:', {
       type,
       page,
       sessionId: getSessionId(),
       metadata,
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
     console.warn('Analytics tracking failed:', error);

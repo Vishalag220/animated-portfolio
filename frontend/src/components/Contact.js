@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useForm } from 'react-hook-form';
 import { Send, Mail, Github, Linkedin } from 'lucide-react';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { trackContactFormView, trackContactFormSubmit } from '../utils/analytics';
 
@@ -27,13 +26,29 @@ const Contact = () => {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      await axios.post('/api/contact', data);
-      
-      // Track successful form submission
-      trackContactFormSubmit(data.subject);
-      
-      toast.success('Message sent successfully! I\'ll get back to you soon.');
-      reset();
+      // Submit to Formspree
+      const response = await fetch('https://formspree.io/f/mblgzvrg', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          subject: data.subject,
+          message: data.message,
+        }),
+      });
+
+      if (response.ok) {
+        // Track successful form submission
+        trackContactFormSubmit(data.subject);
+        
+        toast.success('Message sent successfully! I\'ll get back to you soon.');
+        reset();
+      } else {
+        throw new Error('Failed to send message');
+      }
     } catch (error) {
       console.error('Error sending message:', error);
       toast.error('Failed to send message. Please try again or contact me directly.');
