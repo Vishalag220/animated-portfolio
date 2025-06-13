@@ -19,19 +19,21 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      const scrollY = window.scrollY;
+      setScrolled(scrollY > 50);
 
       // Update active section based on scroll position
-      const sections = navItems.map(item => item.href.slice(1));
-      const currentSection = sections.find(section => {
-        const element = document.getElementById(section);
+      let currentSection = '';
+      navItems.forEach(item => {
+        const element = document.querySelector(item.href);
         if (element) {
           const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            currentSection = item.href.slice(1);
+          }
         }
-        return false;
       });
-      
+
       if (currentSection) {
         setActiveSection(currentSection);
       }
@@ -39,7 +41,7 @@ const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [navItems]);
 
   const scrollToSection = (href) => {
     const element = document.querySelector(href);

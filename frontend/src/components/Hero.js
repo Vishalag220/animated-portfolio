@@ -1,6 +1,6 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Sphere, MeshDistortMaterial, Float, Text3D, Environment } from '@react-three/drei';
+import { Sphere, MeshDistortMaterial, Float, Environment } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { ChevronDown, Github, Linkedin, Mail, Play } from 'lucide-react';
 
