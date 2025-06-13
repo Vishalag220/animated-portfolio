@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { useForm } from 'react-hook-form';
 import { Send, Mail, Github, Linkedin } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { trackContactFormView, trackContactFormSubmit } from '../utils/analytics';
@@ -13,8 +12,6 @@ const Contact = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
   // Track contact form view when component becomes visible
   useEffect(() => {
@@ -23,21 +20,23 @@ const Contact = () => {
     }
   }, [inView]);
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (e) => {
+    e.preventDefault();
     setIsSubmitting(true);
+    
+    const formData = new FormData(e.target);
+    const data = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      subject: formData.get('subject'),
+      message: formData.get('message')
+    };
+
     try {
-      // Submit to Formspree
-      const response = await fetch('https://formspree.io/f/mblgzvrg', {
+      // Submit to Getform
+      const response = await fetch('https://getform.io/f/allzgnpa', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: data.name,
-          email: data.email,
-          subject: data.subject,
-          message: data.message,
-        }),
+        body: formData
       });
 
       if (response.ok) {
@@ -45,7 +44,7 @@ const Contact = () => {
         trackContactFormSubmit(data.subject);
         
         toast.success('Message sent successfully! I\'ll get back to you soon.');
-        reset();
+        e.target.reset();
       } else {
         throw new Error('Failed to send message');
       }
@@ -132,22 +131,20 @@ const Contact = () => {
                 Send me a message
               </h3>
               
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={onSubmit} className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Name *
                     </label>
                     <input
-                      {...register('name', { required: 'Name is required' })}
                       type="text"
                       id="name"
+                      name="name"
+                      required
                       className="w-full px-4 py-3 border border-gray-300 dark:border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-dark-600 text-gray-900 dark:text-white transition-colors duration-200"
                       placeholder="Your name"
                     />
-                    {errors.name && (
-                      <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
-                    )}
                   </div>
                   
                   <div>
@@ -155,21 +152,13 @@ const Contact = () => {
                       Email *
                     </label>
                     <input
-                      {...register('email', { 
-                        required: 'Email is required',
-                        pattern: {
-                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: 'Invalid email address'
-                        }
-                      })}
                       type="email"
                       id="email"
+                      name="email"
+                      required
                       className="w-full px-4 py-3 border border-gray-300 dark:border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-dark-600 text-gray-900 dark:text-white transition-colors duration-200"
                       placeholder="your.email@example.com"
                     />
-                    {errors.email && (
-                      <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
-                    )}
                   </div>
                 </div>
 
@@ -178,15 +167,13 @@ const Contact = () => {
                     Subject *
                   </label>
                   <input
-                    {...register('subject', { required: 'Subject is required' })}
                     type="text"
                     id="subject"
+                    name="subject"
+                    required
                     className="w-full px-4 py-3 border border-gray-300 dark:border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-dark-600 text-gray-900 dark:text-white transition-colors duration-200"
                     placeholder="What's this about?"
                   />
-                  {errors.subject && (
-                    <p className="mt-1 text-sm text-red-500">{errors.subject.message}</p>
-                  )}
                 </div>
 
                 <div>
@@ -194,21 +181,14 @@ const Contact = () => {
                     Message *
                   </label>
                   <textarea
-                    {...register('message', { 
-                      required: 'Message is required',
-                      minLength: {
-                        value: 10,
-                        message: 'Message must be at least 10 characters'
-                      }
-                    })}
                     id="message"
+                    name="message"
                     rows={6}
+                    required
+                    minLength={10}
                     className="w-full px-4 py-3 border border-gray-300 dark:border-dark-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-dark-600 text-gray-900 dark:text-white transition-colors duration-200 resize-none"
                     placeholder="Tell me about your project or just say hello!"
                   />
-                  {errors.message && (
-                    <p className="mt-1 text-sm text-red-500">{errors.message.message}</p>
-                  )}
                 </div>
 
                 <motion.button
