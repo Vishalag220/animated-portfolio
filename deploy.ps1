@@ -1,13 +1,14 @@
 #!/usr/bin/env pwsh
 
-# Quick Deploy Script for Portfolio
-# Usage: ./deploy.ps1 "Your commit message"
+# Portfolio Deployment Script
+# Usage: .\deploy.ps1 "Your commit message"
 
 param(
-    [string]$message = "Update portfolio"
+    [string]$message = "Portfolio update"
 )
 
-Write-Host "Starting deployment process..." -ForegroundColor Green
+Write-Host "🚀 Deploying Portfolio..." -ForegroundColor Green
+Write-Host "📝 Commit message: $message" -ForegroundColor Blue
 
 # Check if we're in a git repository
 if (-not (Test-Path ".git")) {
@@ -16,17 +17,31 @@ if (-not (Test-Path ".git")) {
 }
 
 # Add all changes
-Write-Host "Adding changes..." -ForegroundColor Yellow
+Write-Host "📂 Adding changes..." -ForegroundColor Yellow
 git add .
 
 # Commit changes
-Write-Host "Committing changes..." -ForegroundColor Yellow
+Write-Host "💾 Committing changes..." -ForegroundColor Yellow
 git commit -m $message
 
-# Push to GitHub (triggers auto-deployment)
-Write-Host "Pushing to GitHub..." -ForegroundColor Yellow
+# Push to GitHub
+Write-Host "📤 Pushing to GitHub..." -ForegroundColor Yellow
 git push origin main
 
-Write-Host "Deployment triggered!" -ForegroundColor Green
-Write-Host "Your site will be live in ~2 minutes at: https://vishal-portfolio.vercel.app" -ForegroundColor Cyan
-Write-Host "Check deployment status: https://github.com/Vishalag220/animated-portfolio/actions" -ForegroundColor Cyan 
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "✅ Successfully pushed to GitHub!" -ForegroundColor Green
+    Write-Host "🔄 GitHub Actions will now build your portfolio" -ForegroundColor Cyan
+    Write-Host "🔗 Check progress at: https://github.com/Vishalag220/animated-portfolio/actions" -ForegroundColor Blue
+    
+    # Ask if user wants to deploy to Vercel as well
+    $deployVercel = Read-Host "Would you like to deploy to Vercel now? (y/N)"
+    
+    if ($deployVercel -eq "y" -or $deployVercel -eq "Y") {
+        Write-Host "🌐 Starting Vercel deployment..." -ForegroundColor Yellow
+        .\deploy-vercel.ps1 $message
+    }
+    
+    Write-Host "🎉 Deployment process complete!" -ForegroundColor Green
+} else {
+    Write-Host "❌ Failed to push to GitHub!" -ForegroundColor Red
+} 
