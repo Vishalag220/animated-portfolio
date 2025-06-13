@@ -235,7 +235,7 @@ const Skills = () => {
                 title: "Bachelor of Technology", 
                 issuer: "Swami Keshvanand Institute of Technology", 
                 year: "2021-2025", 
-                details: "Management & Gramodhya"
+                details: "Management & Gramothan"
               },
             ].map((edu) => (
               <motion.div
