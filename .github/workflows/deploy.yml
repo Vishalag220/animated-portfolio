@@ -26,12 +26,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
           
+      - name: 📋 Cache Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            
       - name: 🔧 Install Dependencies
         working-directory: ./frontend
-        run: npm ci
+        run: |
+          npm cache clean --force
+          npm install --legacy-peer-deps
         
       - name: 🏗️ Build Frontend
         working-directory: ./frontend
@@ -52,4 +60,5 @@ jobs:
           echo "- **Node Version**: $(node --version)" >> $GITHUB_STEP_SUMMARY
           echo "- **Build Size**: $(du -sh build | cut -f1)" >> $GITHUB_STEP_SUMMARY
           echo "- **Files Created**: $(find build -type f | wc -l)" >> $GITHUB_STEP_SUMMARY
-          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY 
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Time**: $(date)" >> $GITHUB_STEP_SUMMARY 
