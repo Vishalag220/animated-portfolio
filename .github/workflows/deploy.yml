@@ -1,4 +1,4 @@
-name: 🚀 Auto Deploy to Vercel
+name: 🚀 Build and Validate Portfolio
 
 on:
   # Trigger on push to main branch
@@ -9,13 +9,13 @@ on:
   workflow_dispatch:
     inputs:
       message:
-        description: 'Deployment message'
+        description: 'Build message'
         required: false
-        default: 'Manual deployment triggered'
+        default: 'Manual build triggered'
 
 jobs:
-  deploy:
-    name: 🌐 Deploy Portfolio
+  build:
+    name: 🏗️ Build Portfolio
     runs-on: ubuntu-latest
     
     steps:
@@ -37,17 +37,19 @@ jobs:
         working-directory: ./frontend
         run: npm run build
         
-      - name: 🚀 Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.ORG_ID }}
-          vercel-project-id: ${{ secrets.PROJECT_ID }}
-          working-directory: ./frontend
-          vercel-args: '--prod'
-          
-      - name: 📢 Deployment Status
+      - name: ✅ Build Complete
         run: |
-          echo "🎉 Portfolio deployed successfully!"
-          echo "📝 Message: ${{ github.event.inputs.message || 'Auto deployment from push' }}"
-          echo "🔗 Live at: https://vishal-portfolio.vercel.app" 
+          echo "🎉 Portfolio built successfully!"
+          echo "📝 Message: ${{ github.event.inputs.message || 'Auto build from push' }}"
+          echo "📊 Build size: $(du -sh frontend/build | cut -f1)"
+          echo "🚀 Ready for deployment!"
+          
+      - name: 📋 Build Summary
+        working-directory: ./frontend
+        run: |
+          echo "## 📊 Build Statistics" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build Status**: ✅ Success" >> $GITHUB_STEP_SUMMARY
+          echo "- **Node Version**: $(node --version)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build Size**: $(du -sh build | cut -f1)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Files Created**: $(find build -type f | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY 
