@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sun, Moon, Home, User, Briefcase, Code, Mail } from 'lucide-react';
 import { useDarkMode } from '../contexts/DarkModeContext';
@@ -9,13 +9,13 @@ const Navbar = () => {
   const [activeSection, setActiveSection] = useState('hero');
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
-  const navItems = [
+  const navItems = useMemo(() => [
     { name: 'Home', href: '#hero', icon: Home },
     { name: 'About', href: '#about', icon: User },
     { name: 'Experience', href: '#experience', icon: Briefcase },
     { name: 'Projects', href: '#projects', icon: Code },
     { name: 'Contact', href: '#contact', icon: Mail },
-  ];
+  ], []);
 
   useEffect(() => {
     const handleScroll = () => {
