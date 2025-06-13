@@ -11,10 +11,18 @@
     "start": "cd frontend && npm start",
     "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install"
   },
-  "keywords": ["portfolio", "react", "threejs", "framer-motion", "tailwind", "nodejs", "express"],
+  "keywords": [
+    "portfolio",
+    "react",
+    "threejs",
+    "framer-motion",
+    "tailwind",
+    "nodejs",
+    "express"
+  ],
   "author": "Vishal Agarwal",
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^8.2.2"
   }
-} 
+}
